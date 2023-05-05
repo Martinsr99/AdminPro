@@ -1,19 +1,16 @@
 import { Component } from '@angular/core';
+import { SettingsService } from '../services/settings.service';
 
 @Component({
   selector: 'app-pages',
   templateUrl: './pages.component.html'
 })
 export class PagesComponent {
-  public linkTheme = document.querySelector('#theme')
 
-  constructor(){}
+  constructor(private settingsService: SettingsService){}
 
   ngOnInit():void{
-    const url = localStorage.getItem('theme') || './assets/css/colors/purple-dark.css'
-    if(this.linkTheme){
-      this.linkTheme.setAttribute('href', url)
-    }
+
 
   }
 
