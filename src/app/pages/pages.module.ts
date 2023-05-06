@@ -10,6 +10,7 @@ import { PagesComponent } from './pages.component';
 import { SharedModule } from '../shared/shared.module';
 import { ComponentsModule } from '../components/components.module';
 import { AccountSettingsComponent } from './account-settings/account-settings.component';
+import { RxjsComponent } from './rxjs/rxjs.component';
 
 @NgModule({
   declarations: [
@@ -18,6 +19,7 @@ import { AccountSettingsComponent } from './account-settings/account-settings.co
     Grafica1Component,
     PagesComponent,
     AccountSettingsComponent,
+    RxjsComponent,
   ],
   exports: [
     ProgressComponent,
