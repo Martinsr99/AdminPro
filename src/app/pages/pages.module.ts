@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { ProgressComponent } from './progress/progress.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
@@ -31,6 +31,6 @@ import { PerfilComponent } from './perfil/perfil.component';
     AccountSettingsComponent,
     
   ],
-  imports: [CommonModule,SharedModule,RouterModule,FormsModule,ComponentsModule],
+  imports: [CommonModule,SharedModule,RouterModule,FormsModule,ComponentsModule,ReactiveFormsModule],
 })
 export class PagesModule {}
