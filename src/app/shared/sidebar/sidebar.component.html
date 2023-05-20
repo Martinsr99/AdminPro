@@ -11,7 +11,7 @@
                         [src]="usuario.getImagenUrl()" alt="user" /><span class="hide-menu">{{usuario.nombre}}
                         </span></a>
                     <ul aria-expanded="false" class="collapse">
-                        <li><a href="javascript:void()">My Profile </a></li>
+                        <li><a routerLink="./perfil" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">My Profile </a></li>
                         <li><a href="javascript:void()">My Balance</a></li>
                         <li><a href="javascript:void()">Inbox</a></li>
                         <li><a routerLink='account-settings' routerLinkActive="active">Account Setting</a>

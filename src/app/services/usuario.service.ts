@@ -10,8 +10,6 @@ import { Usuario } from '../models/usuario.model';
 
 const base_url = environment.base_url;
 
-declare const gapi: any;
-
 @Injectable({
   providedIn: 'root',
 })
@@ -23,29 +21,12 @@ export class UsuarioService {
     private http: HttpClient,
     private router: Router,
     private ngZone: NgZone
-  ) {
-    this.googleInit();
-  }
-  googleInit() {
-    return new Promise((resolve) => {
-      gapi.load('auth2', () => {
-        this.auth2 = gapi.auth2.init({
-          client_id:
-            '556660919037-og65tufivptiheli7nl7lvgi8pd4ip8c.apps.googleusercontent.com',
-          cookiepolicy: 'sinost_origin',
-        });
-      });
-    });
-  }
+  ) {}
 
   logout() {
     localStorage.removeItem('token');
 
-    this.auth2.signOut().then(() => {
-      this.ngZone.run(() => {
-        this.router.navigateByUrl('/auth/login');
-      });
-    });
+    this.router.navigateByUrl('/login');
   }
 
   validarToken(): Observable<boolean> {
@@ -58,15 +39,15 @@ export class UsuarioService {
         },
       })
       .pipe(
-        tap((resp: any) => {
-
-          const { email, google, nombre, role, img, uid } = resp.usuario;
+        map((resp: any) => {
+          const { email, google, nombre, role, img = '', uid } = resp.usuario;
 
           this.usuario = new Usuario(nombre, email, '', img, google, role, uid);
 
           localStorage.setItem('token', resp.token);
+
+          return true;
         }),
-        map((resp) => true),
         catchError((error) => of(false))
       );
   }
@@ -81,14 +62,6 @@ export class UsuarioService {
 
   login(formData: LoginForm) {
     return this.http.post(`${base_url}/login`, formData).pipe(
-      tap((resp: any) => {
-        localStorage.setItem('token', resp.token);
-      })
-    );
-  }
-
-  loginGoogle(token) {
-    return this.http.post(`${base_url}/login/google`, { token }).pipe(
       tap((resp: any) => {
         localStorage.setItem('token', resp.token);
       })
