@@ -1,16 +1,17 @@
-import { Component, ViewChild, ElementRef, OnInit, NgZone } from '@angular/core';
+import { Component, ViewChild, ElementRef, OnInit, NgZone, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import Swal from 'sweetalert2';
 
+declare const google: any;
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit,AfterViewInit {
 
   @ViewChild('googleBtn') googleBtn: ElementRef;
 
@@ -35,10 +36,34 @@ export class LoginComponent implements OnInit {
       remember: [false],
     });
   }
+
+  ngAfterViewInit(): void {
+    this.googleInit();
+  }
+
   ngOnInit(): void {
     this.startApp()
   }
 
+  googleInit() {
+    google.accounts.id.initialize({
+      client_id:
+        '556660919037-og65tufivptiheli7nl7lvgi8pd4ip8c.apps.googleusercontent.com',
+      callback:(response:any) => this.handleCredentialResponse(response),
+    });
+    google.accounts.id.renderButton(
+      this.googleBtn.nativeElement,
+      { theme: 'outline', size: 'large' } // customization attributes
+    );
+  }
+
+  handleCredentialResponse(response: any) {
+    console.log('Encoded JWT ID token: ' + response.credential);
+    this.usuarioService.loginGoogle(response.credential).subscribe(resp => {
+      console.log({login:resp})
+      this.router.navigateByUrl('/')
+    })
+  }
 
   login() {
 

@@ -81,6 +81,13 @@ export class UsuarioService {
     })
   }
 
+  loginGoogle(token:string){
+    return this.http.post(`${base_url}/login/google`,{token}).pipe(tap((resp:any) => {
+      localStorage.setItem('token',resp.token),
+      console.log(resp)
+    }))
+  }
+
   login(formData: LoginForm) {
     return this.http.post(`${base_url}/login`, formData).pipe(
       tap((resp: any) => {
