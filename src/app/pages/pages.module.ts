@@ -12,6 +12,7 @@ import { ComponentsModule } from '../components/components.module';
 import { AccountSettingsComponent } from './account-settings/account-settings.component';
 import { RxjsComponent } from './rxjs/rxjs.component';
 import { PerfilComponent } from './perfil/perfil.component';
+import { UsuariosComponent } from './mantenimientos/usuarios/usuarios.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { PerfilComponent } from './perfil/perfil.component';
     AccountSettingsComponent,
     RxjsComponent,
     PerfilComponent,
+    UsuariosComponent,
   ],
   exports: [
     ProgressComponent,
