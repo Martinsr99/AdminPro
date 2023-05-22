@@ -7,6 +7,7 @@ import { LoginForm } from '../interfaces/login-form.interfaces';
 import { Observable, of } from 'rxjs';
 import { Router } from '@angular/router';
 import { Usuario } from '../models/usuario.model';
+import { CargarUsuario } from '../interfaces/cargar-usuarios.interface';
 
 const base_url = environment.base_url;
 
@@ -29,6 +30,14 @@ export class UsuarioService {
 
   get uid():string{
     return this.usuario.uid || ''
+  }
+
+  get headers(){
+    return {
+      headers: {
+        'x-token': this.token
+      }
+    }
   }
 
   logout() {
@@ -94,5 +103,10 @@ export class UsuarioService {
         localStorage.setItem('token', resp.token);
       })
     );
+  }
+
+  cargarUsuarios(from:number = 0) {
+    const url = `${base_url}/usuarios?from=${from}`;
+    return this.http.get<CargarUsuario>(url,this.headers)
   }
 }
