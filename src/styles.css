@@ -23,3 +23,15 @@
     width: 200px;;
     margin-bottom: 10px;
 }
+
+.w100 {
+    width: 100px;
+}
+
+.avatar {
+    width: 30px;
+    border-radius: 100%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
