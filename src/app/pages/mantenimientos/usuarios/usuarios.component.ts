@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Usuario } from 'src/app/models/usuario.model';
+import { BusquedasService } from 'src/app/services/busquedas.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
 
 @Component({
@@ -9,23 +10,26 @@ import { UsuarioService } from 'src/app/services/usuario.service';
 export class UsuariosComponent implements OnInit {
   public totalUsuarios: number = 0;
   public usuarios: Usuario[] = [];
+  public usuariosTemp: Usuario[] = [];
   public from: number = 0;
   public cargando: boolean = true
 
-  constructor(private usuarioService: UsuarioService) {}
+  constructor(private usuarioService: UsuarioService,private busquedasService:BusquedasService) {}
 
   ngOnInit(): void {this.cargarUsuarios()}
 
   cargarUsuarios() {
 
     this.cargando = true
-
+    
     this.usuarioService
-      .cargarUsuarios(this.from)
-      .subscribe(({ total, usuarios }) => {
-        this.totalUsuarios = total;
-        this.usuarios = usuarios;
-      });
+    .cargarUsuarios(this.from)
+    .subscribe(({ total, usuarios }) => {
+      this.totalUsuarios = total;
+      this.usuarios = usuarios;
+      this.usuariosTemp = usuarios;
+      this.cargando = false
+    });
   }
 
   cambiarPagina(valor: number) {
@@ -36,5 +40,15 @@ export class UsuariosComponent implements OnInit {
       this.from -= valor;
     }
     this.cargarUsuarios()
+  }
+
+  buscar(termino:string){
+
+    if(termino.length === 0){
+      return this.usuarios = this.usuariosTemp
+    }
+
+    this.busquedasService.buscar('usuarios',termino).subscribe(resultados => this.usuarios = resultados)
+    return true
   }
 }
