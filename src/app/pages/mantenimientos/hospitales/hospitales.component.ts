@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription, delay } from 'rxjs';
 import { Hospital } from 'src/app/models/hospital.model';
+import { BusquedasService } from 'src/app/services/busquedas.service';
 import { HospitalService } from 'src/app/services/hospital.service';
 import { ModalImagenService } from 'src/app/services/modal-imagen.service';
 import Swal from 'sweetalert2';
@@ -9,20 +10,38 @@ import Swal from 'sweetalert2';
   selector: 'app-hospitales',
   templateUrl: './hospitales.component.html',
 })
-export class HospitalesComponent implements OnInit {
+export class HospitalesComponent implements OnInit,OnDestroy {
   public hospitales: Hospital[] = [];
   public cargando: boolean = true;
   public imgSubs: Subscription;
+  public hospitalesTemp: Hospital[] = [];
+
 
 
   constructor(
     private hospitalService: HospitalService,
-    private modalImagenService: ModalImagenService
-  ) {}
+    private modalImagenService: ModalImagenService,
+    private busquedasService: BusquedasService,
+    ) {}
 
   ngOnInit() {
     this.cargarHospitales();
     this.imgSubs = this.modalImagenService.nuevaImagen.pipe(delay(500)).subscribe(img => this.cargarHospitales())
+  }
+
+  ngOnDestroy(): void {
+    this.imgSubs.unsubscribe();
+  }
+
+  buscar(termino: string) {
+    if (termino.length === 0) {
+      return (this.hospitales = this.hospitalesTemp);
+    }
+
+    this.busquedasService
+      .buscar('hospitales', termino)
+      .subscribe((resultados) => (this.hospitales = resultados));
+    return true;
   }
 
   cargarHospitales() {
@@ -30,6 +49,7 @@ export class HospitalesComponent implements OnInit {
     this.hospitalService.cargarHospitales().subscribe((hospitales) => {
       this.cargando = false;
       this.hospitales = hospitales;
+      this.hospitalesTemp = hospitales;
     });
   }
 
@@ -49,7 +69,7 @@ export class HospitalesComponent implements OnInit {
   }
 
   async abrirSweetAlert() {
-    const { value: nombre } = await Swal.fire<string>({
+    const { value: nombre = '' } = await Swal.fire<string>({
       title: 'Crear hospital',
       text: 'Ingrese el nombre del nuevo hospital',
       input: 'text',
