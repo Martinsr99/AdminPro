@@ -42,6 +42,7 @@ export class UsuarioService {
 
   logout() {
     localStorage.removeItem('token');
+    localStorage.removeItem('menu');
 
     this.router.navigateByUrl('/login');
   }
@@ -60,7 +61,7 @@ export class UsuarioService {
 
           this.usuario = new Usuario(nombre, email, '', img, google, role, uid);
 
-          localStorage.setItem('token', resp.token);
+          this.guardarLocalStorage(resp.token,resp.menu)
 
           return true;
         }),
@@ -71,9 +72,14 @@ export class UsuarioService {
   crearUsuario(formData: RegisterForm) {
     return this.http.post(`${base_url}/usuarios`, formData).pipe(
       tap((resp: any) => {
-        localStorage.setItem('token', resp.token);
+        this.guardarLocalStorage(resp.token,resp.menu)
       })
     );
+  }
+
+  guardarLocalStorage(token:string,menu:any){
+    localStorage.setItem('token', token);
+    localStorage.setItem('menu', JSON.stringify(menu));
   }
 
   actualizarPerfil(data: {email:string,nombre:string,role:string}){
@@ -88,15 +94,15 @@ export class UsuarioService {
 
   loginGoogle(token:string){
     return this.http.post(`${base_url}/login/google`,{token}).pipe(tap((resp:any) => {
-      localStorage.setItem('token',resp.token),
-      console.log(resp)
+      this.guardarLocalStorage(resp.token,resp.menu)
     }))
   }
 
   login(formData: LoginForm) {
     return this.http.post(`${base_url}/login`, formData).pipe(
       tap((resp: any) => {
-        localStorage.setItem('token', resp.token);
+        this.guardarLocalStorage(resp.token,resp.menu)
+
       })
     );
   }
