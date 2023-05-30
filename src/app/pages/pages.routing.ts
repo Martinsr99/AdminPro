@@ -13,6 +13,7 @@ import { MedicosComponent } from './mantenimientos/medicos/medicos.component';
 import { HospitalesComponent } from './mantenimientos/hospitales/hospitales.component';
 import { MedicoComponent } from './mantenimientos/medicos/medico.component';
 import { BusquedaComponent } from './busqueda/busqueda.component';
+import { AdminGuard } from '../guards/admin.guard';
 
 const routes: Routes = [
   {
@@ -27,10 +28,10 @@ const routes: Routes = [
       { path: 'buscar/:termino', component: BusquedaComponent,data:{titulo:'Búsquedas'} },
       { path: 'rxjs', component: RxjsComponent,data:{titulo:'Rxjs'} },
       { path: 'perfil', component: PerfilComponent,data:{titulo:'Perfil'} },
-      { path: 'usuarios', component: UsuariosComponent,data:{titulo:'Usuario de aplicación'} },
       { path: 'medicos', component: MedicosComponent,data:{titulo:'Mantenimiento de Medicos'} },
       { path: 'medico/:id', component: MedicoComponent,data:{titulo:'Mantenimiento de Medico'} },
       { path: 'hospitales', component: HospitalesComponent,data:{titulo:'Mantenimiento de Hospitales'} },
+      { path: 'usuarios',canActivate:[AdminGuard] ,component: UsuariosComponent,data:{titulo:'Usuario de aplicación'} },
     ],
   },
 ];
